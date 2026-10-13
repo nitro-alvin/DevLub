@@ -542,6 +542,104 @@ svg {
   margin-top: 4px;
 }
 
+/* ---------- Field groups (input + copy button rows) ---------- */
+.field-group {
+  margin: 14px 0;
+}
+
+.field-input-group {
+  display: flex;
+  gap: 8px;
+  align-items: stretch;
+  min-width: 0;
+}
+
+.field-input-group .code-input {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.field-input-group .btn {
+  flex: 0 0 auto;
+  align-self: stretch;
+}
+
+.field-input-group .select-input {
+  flex: 0 0 auto;
+}
+
+/* Selects inside input groups sit directly beside the field. */
+.select-input {
+  min-height: 46px;
+  padding: 10px 12px;
+  font-size: 16px;
+  color: var(--text);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  -webkit-appearance: none;
+  appearance: none;
+  cursor: pointer;
+}
+
+.select-input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+/* ---------- Converter sections (timestamp) ---------- */
+.converter {
+  padding: 14px;
+  margin-bottom: 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+}
+
+.converter-title {
+  font-size: 1rem;
+  font-weight: 650;
+  margin-bottom: 4px;
+}
+
+.converter .field-group {
+  margin: 10px 0;
+}
+
+/* ---------- Colour preview (colour converter) ---------- */
+.color-preview {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 96px;
+  margin: 14px 0;
+  overflow: hidden;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-lg);
+  /* Checkerboard shows only while no colour is picked (swatch is transparent). */
+  background: repeating-conic-gradient(var(--surface-2) 0% 25%, var(--surface) 0% 50%) 0 0/22px 22px;
+}
+
+/* Fills the preview box; background-color is set inline, so it paints above
+   the checkerboard instead of being hidden under its image layer. */
+.color-preview-swatch {
+  position: absolute;
+  inset: 0;
+}
+
+.color-preview-label {
+  position: relative;
+  padding: 6px 12px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  font-size: 0.9rem;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+}
+
 /* ---------- Text counter stats ---------- */
 .stats {
   display: grid;

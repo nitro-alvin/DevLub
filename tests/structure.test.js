@@ -56,8 +56,10 @@ test('tool views use unique element ids', () => {
   }
 });
 
-test('the registry exposes exactly the five core tools', () => {
-  assert.deepEqual(tools.map((t) => t.id), ['json', 'base64', 'url', 'uuid', 'counter']);
+test('the registry exposes exactly the eight tools', () => {
+  assert.deepEqual(tools.map((t) => t.id), [
+    'json', 'base64', 'url', 'uuid', 'counter', 'color', 'hash', 'timestamp',
+  ]);
   for (const tool of tools) {
     assert.equal(typeof tool.name, 'string');
     assert.ok(tool.name.length > 0);

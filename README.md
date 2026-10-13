@@ -13,6 +13,9 @@ and every tool keeps working offline once the page has loaded.
 | **URL Encoder / Decoder** | Percent-encode text and query strings, or decode them back — built on the browser's own `encodeURIComponent` / `decodeURIComponent`. |
 | **UUID Generator** | Secure UUID v4 values via `crypto.randomUUID()` (with a `crypto.getRandomValues` fallback). Generate 1–100 at a time. |
 | **Text Counter** | Live characters, characters without spaces, words, lines, sentences and UTF-8 byte counts. |
+| **Colour Converter** | HEX ⇄ RGB ⇄ HSL in any direction, with a live swatch preview. Type into one field and the others stay in sync. |
+| **SHA-256 Hash** | One-way SHA-256 hex digests via the Web Crypto API — same input, same hash, nothing sent anywhere. |
+| **Unix Timestamp** | Epoch ⇄ readable dates in seconds or milliseconds (auto-detected), shown in both local time and UTC. |
 
 ## Design
 
@@ -45,7 +48,8 @@ js/
   dom.js              Shared DOM helpers + guarded action binding
   icons.js            Inline SVG icons
   tool-scaffold.js    Shared markup for tool views
-  lib/                Pure, testable logic (JSON, Base64, URL, UUID, text stats)
+  lib/                Pure, testable logic (JSON, Base64, URL, UUID, text stats,
+                        colour conversion, SHA-256, timestamps)
   tools/              One module per tool view + the registry
 tests/                Unit tests (Node's built-in test runner, zero dependencies)
 ```
