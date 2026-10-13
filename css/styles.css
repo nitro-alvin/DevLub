@@ -588,6 +588,52 @@ svg {
   box-shadow: 0 0 0 3px var(--accent-soft);
 }
 
+/* ---------- File import & download (shared file controls) ---------- */
+.file-import {
+  margin-bottom: 4px;
+}
+
+.file-actions {
+  flex-wrap: wrap;
+}
+
+/* Size to the label and, when they no longer fit side by side, take a full,
+   easy-to-tap row each instead of wrapping the text mid-button. */
+.file-actions .btn {
+  flex: 1 1 auto;
+  white-space: nowrap;
+}
+
+/* .btn sets display, which would otherwise beat the [hidden] attribute. */
+.file-actions .btn[hidden] {
+  display: none;
+}
+
+/* Filename + size shown after a successful import. */
+.file-info {
+  display: block;
+  margin: 4px 0 8px;
+  padding: 8px 12px;
+  font-size: 0.85rem;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow-wrap: anywhere;
+}
+
+.file-info[hidden] {
+  display: none;
+}
+
+.download-bar {
+  margin: 14px 0 4px;
+}
+
+.download-bar[hidden] {
+  display: none;
+}
+
 /* ---------- Converter sections (timestamp) ---------- */
 .converter {
   padding: 14px;

@@ -4,6 +4,7 @@ import { generateUuids } from '../lib/uuid.js';
 import { copyToClipboard } from '../clipboard.js';
 import { qs, showError, clearError, clearFields, bindActions } from '../dom.js';
 import { toolHead, errorBox, outputSection } from '../tool-scaffold.js';
+import { downloadMarkup, createDownloadBar, downloadText } from '../file-download.js';
 
 const MAX_UUIDS = 100;
 
@@ -29,41 +30,57 @@ export function mountUuidTool(section, { goBack }) {
       id: 'uuid-output',
       label: 'Generated UUIDs',
       placeholder: 'Tap Generate to create UUIDs.',
-    });
+    }) +
+    downloadMarkup({ id: 'uuid-name', hint: 'Download single UUIDs or a whole batch as a .txt file.' });
 
   const countInput = qs(section, '#uuid-count');
   const output = qs(section, '#uuid-output');
   const errorBoxEl = qs(section, '.error-box');
+  const bar = createDownloadBar(section, { id: 'uuid-name', defaultName: 'uuid.txt' });
 
   function generate() {
     const raw = countInput.value.trim();
     const count = Number(raw);
     if (!raw || !Number.isInteger(count) || count < 1) {
       output.value = '';
+      bar.hide();
       showError(errorBoxEl, 'Enter a whole number between 1 and ' + MAX_UUIDS + '.');
       return;
     }
     if (count > MAX_UUIDS) {
       output.value = '';
+      bar.hide();
       showError(errorBoxEl, 'You can generate at most ' + MAX_UUIDS + ' UUIDs at a time.');
       return;
     }
     clearError(errorBoxEl);
     output.value = generateUuids(count).join('\n');
     output.rows = Math.min(Math.max(count, 3), 12);
+    bar.show(count === 1 ? 'uuid.txt' : 'uuids.txt');
   }
 
-  countInput.addEventListener('input', () => clearError(errorBoxEl));
+  countInput.addEventListener('input', () => {
+    clearError(errorBoxEl);
+    bar.hide();
+  });
 
   bindActions(section, {
     back: goBack,
     generate,
     copy: () => copyToClipboard(output.value, 'UUIDs copied'),
+    download: () => {
+      if (!output.value) {
+        showError(errorBoxEl, 'Generate some UUIDs first, then download them.');
+        return;
+      }
+      downloadText(output.value, bar.name);
+    },
     clear: () => {
       clearFields([countInput, output], { focusFirst: false });
       countInput.value = '1';
       output.rows = 8;
       clearError(errorBoxEl);
+      bar.reset();
       countInput.focus();
     },
   });

@@ -194,6 +194,79 @@ test('sha256Hex matches known digests and is available in modern runtimes', asyn
   );
 });
 
+// ---------- File helpers ----------
+import {
+  MAX_FILE_BYTES,
+  formatFileSize,
+  extensionOf,
+  describeExtensions,
+  acceptAttribute,
+  validateFile,
+  safeFileName,
+  baseName,
+  suggestFileName,
+} from '../js/lib/files.js';
+
+test('formatFileSize renders readable sizes', () => {
+  assert.equal(formatFileSize(0), '0 B');
+  assert.equal(formatFileSize(512), '512 B');
+  assert.equal(formatFileSize(1024), '1 KB');
+  assert.equal(formatFileSize(1536), '1.5 KB');
+  assert.equal(formatFileSize(5 * 1024 * 1024), '5 MB');
+  assert.equal(formatFileSize(-5), '0 B');
+  assert.equal(formatFileSize('nope'), '0 B');
+});
+
+test('extensionOf and describeExtensions are case-insensitive', () => {
+  assert.equal(extensionOf('Report.JSON'), 'json');
+  assert.equal(extensionOf('archive.tar.gz'), 'gz');
+  assert.equal(extensionOf('no-extension'), '');
+  assert.equal(describeExtensions(['txt', 'md', 'csv']), '.txt, .md or .csv');
+  assert.equal(describeExtensions(['json']), '.json');
+  assert.equal(acceptAttribute(['txt', 'json']), '.txt,.json,application/json');
+});
+
+test('validateFile accepts allowed text files and rejects the rest', () => {
+  const accept = ['txt', 'md', 'csv'];
+  assert.equal(validateFile({ name: 'notes.txt', size: 120, type: 'text/plain' }, { accept }).ok, true);
+  assert.equal(validateFile({ name: 'data.csv', size: 10, type: 'text/csv' }, { accept }).ok, true);
+
+  const empty = validateFile({ name: 'notes.txt', size: 0, type: 'text/plain' }, { accept });
+  assert.equal(empty.ok, false);
+  assert.match(empty.error, /empty/);
+
+  const tooBig = validateFile({ name: 'notes.txt', size: MAX_FILE_BYTES + 1, type: 'text/plain' }, { accept });
+  assert.equal(tooBig.ok, false);
+  assert.match(tooBig.error, /under 5 MB/);
+
+  const wrongType = validateFile({ name: 'photo.png', size: 100, type: 'image/png' }, { accept });
+  assert.equal(wrongType.ok, false);
+  assert.match(wrongType.error, /\.txt, \.md or \.csv/);
+
+  // A text-ish MIME with no extension is allowed (some Android pickers do this).
+  assert.equal(validateFile({ name: 'paste', size: 10, type: 'text/plain' }, { accept }).ok, true);
+});
+
+test('safeFileName strips untrusted path and control characters', () => {
+  const traversal = safeFileName('../../etc/passwd');
+  assert.ok(!traversal.includes('/') && !traversal.includes('\\'), 'no path separators');
+  assert.ok(!traversal.startsWith('.'), 'no leading dot');
+  assert.equal(safeFileName('a/b\\c.txt'), 'a_b_c.txt');
+  assert.equal(safeFileName('bad<>:"|?*name.txt'), 'bad_______name.txt');
+  assert.equal(safeFileName('\u0000evil.txt'), 'evil.txt');
+  assert.equal(safeFileName('...hidden'), 'hidden');
+  assert.ok(safeFileName('x'.repeat(400)).length <= 120);
+});
+
+test('suggestFileName builds sensible download names', () => {
+  assert.equal(suggestFileName('data.json', { suffix: 'formatted', ext: 'json' }), 'data-formatted.json');
+  assert.equal(suggestFileName('data.json', { suffix: 'minified', ext: 'json' }), 'data-minified.json');
+  assert.equal(suggestFileName('notes.txt', { suffix: 'encoded', ext: 'txt' }), 'notes-encoded.txt');
+  assert.equal(suggestFileName('', { suffix: 'formatted', ext: 'json', fallbackBase: 'data' }), 'data-formatted.json');
+  assert.equal(baseName('report.md'), 'report');
+  assert.equal(suggestFileName('report.md', { ext: 'txt' }), 'report.txt');
+});
+
 // ---------- Timestamp ----------
 import { parseTimestamp, parseDateTimeInput, detectTimestampUnit, formatUtc } from '../js/lib/timestamp.js';
 

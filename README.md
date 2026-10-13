@@ -17,6 +17,24 @@ and every tool keeps working offline once the page has loaded.
 | **SHA-256 Hash** | One-way SHA-256 hex digests via the Web Crypto API — same input, same hash, nothing sent anywhere. |
 | **Unix Timestamp** | Epoch ⇄ readable dates in seconds or milliseconds (auto-detected), shown in both local time and UTC. |
 
+## Files
+
+Most tools can read a local text file and save their result back to one — all through
+built-in browser APIs (`FileReader`, `Blob`, object URLs), with nothing uploaded:
+
+- **Choose file** loads `.txt`, `.md`, `.csv`, `.json`, `.sql` or `.log` (depending on the tool)
+  into the normal input field, shows the file name and size, and lets you keep editing before processing.
+- **Remove file** detaches the imported file and clears its contents.
+- **Download** saves the result you produced (with a name you can edit first) as a fresh copy.
+  The original file on disk is never modified or overwritten.
+- Files are capped at **5 MB**; empty, oversized and unsupported files get a friendly message.
+
+JSON, Base64, URL, Text Counter and SHA-256 accept imports. Colour, UUID and Timestamp
+produce downloads only — they do not need a file to work.
+
+> SHA-256 hashes the **text content** shown in the field, encoded as UTF-8. That matches a
+> plain text file's contents, but it is not a byte-for-byte checksum of an arbitrary binary file.
+
 ## Design
 
 - **Mobile-first** — comfortable from 320 px phones up to desktop, with 44 px+ touch targets and 16 px inputs (no Android keyboard zoom).
@@ -48,8 +66,10 @@ js/
   dom.js              Shared DOM helpers + guarded action binding
   icons.js            Inline SVG icons
   tool-scaffold.js    Shared markup for tool views
+  file-import.js      Shared "Choose file" control (reads locally, never uploads)
+  file-download.js    Shared "Download result" control (Blob + object URLs, revoked after use)
   lib/                Pure, testable logic (JSON, Base64, URL, UUID, text stats,
-                        colour conversion, SHA-256, timestamps)
+                        colour conversion, SHA-256, timestamps, file name/type/size helpers)
   tools/              One module per tool view + the registry
 tests/                Unit tests (Node's built-in test runner, zero dependencies)
 ```

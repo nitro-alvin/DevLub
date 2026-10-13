@@ -71,6 +71,20 @@ test('the registry exposes exactly the eight tools', () => {
   }
 });
 
+test('every tool offers a download control and the right tools offer file import', () => {
+  // Colour, UUID and Timestamp deliberately do not take file uploads.
+  const withImport = ['json', 'base64', 'url', 'counter', 'hash'];
+  for (const tool of tools) {
+    const source = read('js/tools/' + tool.id + '.js');
+    assert.ok(source.includes('downloadMarkup'), tool.id + ' should offer a download control');
+    if (withImport.includes(tool.id)) {
+      assert.ok(source.includes('fileImportMarkup'), tool.id + ' should offer file import');
+    } else {
+      assert.ok(!source.includes('fileImportMarkup'), tool.id + ' should not force file import');
+    }
+  }
+});
+
 test('the app never contacts the network or leaves data on the device', () => {
   for (const file of jsFiles) {
     const source = readFileSync(file, 'utf8');

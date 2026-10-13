@@ -5,6 +5,7 @@ import { copyToClipboard } from '../clipboard.js';
 import { icons } from '../icons.js';
 import { qs, showError, clearError, clearFields, bindActions } from '../dom.js';
 import { toolHead, errorBox } from '../tool-scaffold.js';
+import { downloadMarkup, createDownloadBar, downloadText } from '../file-download.js';
 
 const DEFAULT_UNIT_HINT = 'Auto-detects seconds or milliseconds — you can override it.';
 
@@ -59,7 +60,8 @@ export function mountTimestampTool(section, { goBack }) {
     '</section>' +
     '<div class="actions">' +
     '<button type="button" class="btn" data-action="clear">' + icons.trash + '<span>Clear</span></button>' +
-    '</div>';
+    '</div>' +
+    downloadMarkup({ id: 'ts-name', hint: 'Download the input, its unit and both local and UTC results as .txt.' });
 
   const valueInput = qs(section, '#ts-value');
   const unitSelect = qs(section, '#ts-unit');
@@ -71,10 +73,38 @@ export function mountTimestampTool(section, { goBack }) {
   const msOutput = qs(section, '#ts-ms');
   const fromError = qs(section, '#ts-from .error-box');
   const toError = qs(section, '#ts-to .error-box');
+  const bar = createDownloadBar(section, { id: 'ts-name', defaultName: 'timestamp.txt' });
+
+  let unitText = '';
+
+  function compose() {
+    const lines = ['Unix timestamp conversion', ''];
+    if (valueInput.value.trim() && localOutput.value) {
+      lines.push('Timestamp input: ' + valueInput.value.trim());
+      lines.push('Unit: ' + unitText);
+      lines.push('Local time: ' + localOutput.value);
+      lines.push('UTC: ' + utcOutput.value);
+    }
+    if (secondsOutput.value) {
+      if (localOutput.value) lines.push('');
+      if (dateInput.value) lines.push('Date input: ' + dateInput.value);
+      lines.push('Unix seconds: ' + secondsOutput.value);
+      lines.push('Milliseconds: ' + msOutput.value);
+    }
+    if (lines.length <= 2) return '';
+    return lines.join('\n').trim();
+  }
+
+  function refreshBar() {
+    const text = compose();
+    if (text) bar.show('timestamp.txt');
+    else bar.hide();
+  }
 
   function clearFromResults() {
     localOutput.value = '';
     utcOutput.value = '';
+    unitText = '';
     unitHint.textContent = DEFAULT_UNIT_HINT;
   }
 
@@ -84,14 +114,16 @@ export function mountTimestampTool(section, { goBack }) {
       clearFromResults();
       if (result.empty) clearError(fromError);
       else showError(fromError, result.error);
+      refreshBar();
       return;
     }
     clearError(fromError);
     localOutput.value = formatLocal(result.date);
     utcOutput.value = formatUtc(result.date);
+    unitText = result.unit === 's' ? 'seconds' : 'milliseconds';
     unitHint.textContent =
-      'Using ' + (result.unit === 's' ? 'seconds' : 'milliseconds') +
-      (unitSelect.value === 'auto' ? ' (auto-detected)' : '');
+      'Using ' + unitText + (unitSelect.value === 'auto' ? ' (auto-detected)' : '');
+    refreshBar();
   }
 
   function updateToDate() {
@@ -101,11 +133,13 @@ export function mountTimestampTool(section, { goBack }) {
       msOutput.value = '';
       if (result.empty) clearError(toError);
       else showError(toError, result.error);
+      refreshBar();
       return;
     }
     clearError(toError);
     secondsOutput.value = String(result.seconds);
     msOutput.value = String(result.ms);
+    refreshBar();
   }
 
   valueInput.addEventListener('input', updateFromDate);
@@ -118,6 +152,14 @@ export function mountTimestampTool(section, { goBack }) {
     copyUtc: () => copyToClipboard(utcOutput.value, 'UTC time copied'),
     copySeconds: () => copyToClipboard(secondsOutput.value, 'Timestamp copied'),
     copyMs: () => copyToClipboard(msOutput.value, 'Milliseconds copied'),
+    download: () => {
+      const text = compose();
+      if (!text) {
+        showError(fromError, 'Convert a timestamp or a date first, then download the result.');
+        return;
+      }
+      downloadText(text, bar.name);
+    },
     clear: () => {
       clearFields([valueInput, dateInput], { focusFirst: false });
       clearFromResults();
@@ -125,6 +167,7 @@ export function mountTimestampTool(section, { goBack }) {
       msOutput.value = '';
       clearError(fromError);
       clearError(toError);
+      bar.reset();
       valueInput.focus();
     },
   });

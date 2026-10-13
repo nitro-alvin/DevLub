@@ -5,6 +5,7 @@ import { copyToClipboard } from '../clipboard.js';
 import { icons } from '../icons.js';
 import { qs, showError, clearError, clearFields, bindActions } from '../dom.js';
 import { toolHead, errorBox } from '../tool-scaffold.js';
+import { downloadMarkup, createDownloadBar, downloadText } from '../file-download.js';
 
 function fieldGroup({ id, label, placeholder }) {
   return (
@@ -36,7 +37,8 @@ export function mountColorTool(section, { goBack }) {
     errorBox() +
     '<div class="actions">' +
     '<button type="button" class="btn" data-action="clear">' + icons.trash + '<span>Clear</span></button>' +
-    '</div>';
+    '</div>' +
+    downloadMarkup({ id: 'color-name', hint: 'Download the HEX, RGB and HSL values as a .txt file.' });
 
   const hexInput = qs(section, '#color-hex');
   const rgbInput = qs(section, '#color-rgb');
@@ -46,6 +48,7 @@ export function mountColorTool(section, { goBack }) {
   const swatch = qs(section, '#color-preview-swatch');
   const previewLabel = qs(section, '#color-preview-label');
   const fields = { hex: hexInput, rgb: rgbInput, hsl: hslInput };
+  const bar = createDownloadBar(section, { id: 'color-name', defaultName: 'color.txt' });
 
   function resetPreview() {
     swatch.style.backgroundColor = '';
@@ -60,6 +63,7 @@ export function mountColorTool(section, { goBack }) {
       for (const [, field] of others) field.value = '';
       resetPreview();
       clearError(errorBoxEl);
+      bar.hide();
       return;
     }
     try {
@@ -69,8 +73,10 @@ export function mountColorTool(section, { goBack }) {
       previewLabel.textContent = result.hex;
       preview.setAttribute('aria-label', 'Colour preview ' + result.hex);
       clearError(errorBoxEl);
+      bar.show('color.txt');
     } catch (error) {
       showError(errorBoxEl, error instanceof Error ? error.message : 'That colour could not be converted.');
+      bar.hide();
     }
   }
 
@@ -83,10 +89,24 @@ export function mountColorTool(section, { goBack }) {
     copyHEX: () => copyToClipboard(hexInput.value, 'HEX copied'),
     copyRGB: () => copyToClipboard(rgbInput.value, 'RGB copied'),
     copyHSL: () => copyToClipboard(hslInput.value, 'HSL copied'),
+    download: () => {
+      if (!hexInput.value) {
+        showError(errorBoxEl, 'Enter a colour first, then download its values.');
+        return;
+      }
+      const lines = [
+        'Colour values',
+        'HEX: ' + hexInput.value,
+        'RGB: ' + rgbInput.value,
+        'HSL: ' + hslInput.value,
+      ];
+      downloadText(lines.join('\n'), bar.name);
+    },
     clear: () => {
       clearFields([hexInput, rgbInput, hslInput]);
       clearError(errorBoxEl);
       resetPreview();
+      bar.reset();
     },
   });
 }
