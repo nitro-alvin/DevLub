@@ -245,3 +245,22 @@ test('parseDateTimeInput converts local datetime values', () => {
   const invalid = parseDateTimeInput('not-a-date');
   assert.equal(invalid.ok, false);
 });
+
+test('sha256Hex fails gracefully when Web Crypto is unavailable', async () => {
+  // Simulate a non-secure context (e.g. plain-HTTP hosting) where crypto is absent.
+  const original = Object.getOwnPropertyDescriptor(globalThis, 'crypto');
+  Object.defineProperty(globalThis, 'crypto', { value: undefined, configurable: true, writable: true });
+  try {
+    assert.equal(isSha256Supported(), false);
+    await assert.rejects(
+      () => sha256Hex('hello'),
+      (error) => {
+        assert.match(error.message, /secure context/); // the same message the tool shows
+        return true;
+      },
+    );
+  } finally {
+    Object.defineProperty(globalThis, 'crypto', original);
+  }
+  assert.equal(isSha256Supported(), true); // environment restored
+});
