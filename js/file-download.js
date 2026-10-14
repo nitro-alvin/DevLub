@@ -28,13 +28,13 @@ export function downloadMarkup({ id, label = 'File name', hint = '' }) {
 }
 
 /** Trigger a text download with the given filename. Returns true when sent. */
-export function downloadText(text, fileName) {
+export function downloadText(text, fileName, mime = 'text/plain;charset=utf-8') {
   if (text == null || text === '') {
     showToast('There is nothing to download yet', { type: 'error' });
     return false;
   }
   const name = safeFileName(fileName) || 'download.txt';
-  const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+  const blob = new Blob([text], { type: mime });
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
   link.href = url;

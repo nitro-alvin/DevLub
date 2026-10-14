@@ -8,6 +8,16 @@ import { mountCounterTool } from './counter.js';
 import { mountColorTool } from './color.js';
 import { mountHashTool } from './hash.js';
 import { mountTimestampTool } from './timestamp.js';
+import { mountDiffTool } from './diff.js';
+import { mountJwtTool } from './jwt.js';
+import { mountRegexTool } from './regex.js';
+import { mountSqlTool } from './sql.js';
+import { mountJsonCsvTool } from './json2csv.js';
+import { mountMarkdownTool } from './markdown.js';
+import { mountHttpStatusTool } from './httpstatus.js';
+import { mountCronTool } from './cron.js';
+import { mountHtmlEntityTool } from './htmlentity.js';
+import { mountBaseTool } from './base.js';
 
 export const tools = [
   {
@@ -73,5 +83,85 @@ export const tools = [
     keywords: ['unix', 'epoch', 'timestamp', 'seconds', 'milliseconds', 'date', 'utc', 'time'],
     badge: 'UTC',
     mount: mountTimestampTool,
+  },
+  {
+    id: 'diff',
+    name: 'Diff Checker',
+    description: 'Compare two texts or code files and highlight every added, removed and unchanged line.',
+    keywords: ['diff', 'compare', 'changes', 'patch', 'merge', 'lines', 'git', 'original', 'modified'],
+    badge: '±',
+    mount: mountDiffTool,
+  },
+  {
+    id: 'jwt',
+    name: 'JWT Decoder',
+    description: 'Read a JWT header, payload and claims locally — decoding only, never verification.',
+    keywords: ['jwt', 'jws', 'token', 'decode', 'claims', 'bearer', 'auth', 'payload', 'header'],
+    badge: 'JWT',
+    mount: mountJwtTool,
+  },
+  {
+    id: 'regex',
+    name: 'Regex Tester',
+    description: 'Test a regular expression with highlighted matches, positions and capture groups.',
+    keywords: ['regex', 'regexp', 'pattern', 'match', 'groups', 'test', 'flags', 'capture'],
+    badge: '.*',
+    mount: mountRegexTool,
+  },
+  {
+    id: 'sql',
+    name: 'SQL Formatter',
+    description: 'Indent, line-break or minify SQL text. Never executed and never uploaded.',
+    keywords: ['sql', 'query', 'format', 'beautify', 'minify', 'select', 'database', 'indent'],
+    badge: 'SQL',
+    mount: mountSqlTool,
+  },
+  {
+    id: 'json2csv',
+    name: 'JSON → CSV',
+    description: 'Convert a JSON array of objects into properly escaped CSV.',
+    keywords: ['json', 'csv', 'convert', 'export', 'spreadsheet', 'table', 'rows', 'columns'],
+    badge: 'CSV',
+    mount: mountJsonCsvTool,
+  },
+  {
+    id: 'markdown',
+    name: 'Markdown Previewer',
+    description: 'Write Markdown and see a live, sanitized HTML preview as you type.',
+    keywords: ['markdown', 'md', 'preview', 'html', 'readme', 'editor', 'render', 'tables'],
+    badge: 'MD',
+    mount: mountMarkdownTool,
+  },
+  {
+    id: 'httpstatus',
+    name: 'HTTP Status Lookup',
+    description: 'Search HTTP status codes 1xx–5xx with plain-English explanations, fully offline.',
+    keywords: ['http', 'status', 'code', '404', '500', 'response', 'api', 'rest', 'error'],
+    badge: '404',
+    mount: mountHttpStatusTool,
+  },
+  {
+    id: 'cron',
+    name: 'Cron Helper',
+    description: 'Explain a cron expression field by field in plain English.',
+    keywords: ['cron', 'crontab', 'schedule', 'expression', 'job', 'timer', 'interval'],
+    badge: 'CRON',
+    mount: mountCronTool,
+  },
+  {
+    id: 'htmlentity',
+    name: 'HTML Entity Converter',
+    description: 'Encode text into HTML entities or decode them back, including Unicode.',
+    keywords: ['html', 'entity', 'entities', 'encode', 'decode', 'escape', 'amp', 'unicode'],
+    badge: '&amp;',
+    mount: mountHtmlEntityTool,
+  },
+  {
+    id: 'base',
+    name: 'Number Base Converter',
+    description: 'Convert between binary, octal, decimal and hex with exact BigInt maths.',
+    keywords: ['binary', 'octal', 'decimal', 'hex', 'hexadecimal', 'base', 'convert', 'radix', 'bit'],
+    badge: '0x',
+    mount: mountBaseTool,
   },
 ];

@@ -12,7 +12,14 @@ import { MAX_FILE_BYTES, formatFileSize, validateFile, acceptAttribute, safeFile
  * Markup for an import control. `id` must be unique across the page.
  * `extensions` drives the picker's accept filter and validation.
  */
-export function fileImportMarkup({ id, extensions, hint = '' }) {
+export function fileImportMarkup({
+  id,
+  extensions,
+  hint = '',
+  label = 'Choose file',
+  chooseAction = 'chooseFile',
+  removeAction = 'removeFile',
+}) {
   const note = (hint ? hint + ' ' : '') +
     'Files up to ' + formatFileSize(MAX_FILE_BYTES) + ' are read on your device.';
   return (
@@ -20,11 +27,12 @@ export function fileImportMarkup({ id, extensions, hint = '' }) {
     '<input class="visually-hidden" type="file" id="' + id + '" ' +
     'accept="' + acceptAttribute(extensions) + '" tabindex="-1" data-file-input>' +
     '<div class="actions file-actions">' +
-    '<button type="button" class="btn" data-action="chooseFile">' + icons.file + '<span>Choose file</span></button>' +
-    '<button type="button" class="btn" data-action="removeFile" hidden>' +
+    '<button type="button" class="btn" data-action="' + chooseAction + '">' +
+    icons.file + '<span>' + label + '</span></button>' +
+    '<button type="button" class="btn" data-action="' + removeAction + '" hidden>' +
     icons.trash + '<span>Remove file</span></button>' +
     '</div>' +
-    '<p class="file-info" data-file-info hidden></p>' +
+    '<p class="file-info" id="' + id + '-info" data-file-info hidden></p>' +
     '<p class="field-hint">' + note + '</p>' +
     '</div>'
   );
@@ -46,10 +54,17 @@ export function readFileText(file) {
  * `onError(message)` receives a friendly message for empty/invalid files.
  * Returns a small controller so the tool can reset or remove the file.
  */
-export function createFileImport(section, { id, extensions, onText, onError, maxBytes = MAX_FILE_BYTES }) {
+export function createFileImport(section, {
+  id,
+  extensions,
+  onText,
+  onError,
+  maxBytes = MAX_FILE_BYTES,
+  removeAction = 'removeFile',
+}) {
   const input = section.querySelector('#' + id);
-  const info = section.querySelector('[data-file-info]');
-  const removeBtn = section.querySelector('[data-action="removeFile"]');
+  const info = section.querySelector('#' + id + '-info');
+  const removeBtn = section.querySelector('[data-action="' + removeAction + '"]');
   let current = null;
 
   function render() {

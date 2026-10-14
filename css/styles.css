@@ -754,6 +754,532 @@ svg {
   border-color: var(--toast-error-border);
 }
 
+/* ---------- Diff checker ---------- */
+.diff-columns {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+
+.diff-side {
+  min-width: 0;
+}
+
+.diff-summary {
+  margin: 12px 0;
+  padding: 10px 12px;
+  font-weight: 600;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+
+.diff-view {
+  margin-bottom: 12px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  font-size: 0.82rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.diff-line {
+  display: grid;
+  grid-template-columns: 2.4em 2.4em 1.1em minmax(0, 1fr);
+  align-items: start;
+}
+
+.diff-gutter {
+  padding: 2px 4px;
+  text-align: right;
+  color: var(--muted);
+  background: var(--surface-2);
+  border-right: 1px solid var(--border);
+  font-variant-numeric: tabular-nums;
+  user-select: none;
+}
+
+.diff-marker {
+  padding: 2px 4px;
+  text-align: center;
+  color: var(--muted);
+  user-select: none;
+}
+
+.diff-text {
+  padding: 2px 8px 2px 4px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.diff-add {
+  background: rgba(70, 194, 92, 0.14);
+}
+
+.diff-del {
+  background: rgba(255, 123, 129, 0.14);
+}
+
+.diff-add .diff-marker {
+  color: var(--success);
+  font-weight: 700;
+}
+
+.diff-del .diff-marker {
+  color: var(--danger);
+  font-weight: 700;
+}
+
+/* ---------- Options, chips and small buttons ---------- */
+.option-group {
+  margin: 12px 0;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  font-size: 0.95rem;
+}
+
+.option input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  flex: 0 0 auto;
+  accent-color: var(--accent);
+}
+
+.option-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+}
+
+.chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 8px 0 12px;
+}
+
+.btn-chip {
+  min-height: 42px;
+  padding: 6px 14px;
+  font-size: 0.9rem;
+  border-radius: 999px;
+}
+
+.btn-chip.is-active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--on-accent);
+  font-weight: 650;
+}
+
+.btn-mini {
+  min-height: 40px;
+  padding: 6px 12px;
+  font-size: 0.85rem;
+}
+
+/* ---------- Result cards, code blocks, claims ---------- */
+.result-card {
+  margin: 12px 0;
+  padding: 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.result-title {
+  margin-bottom: 8px;
+  font-size: 0.95rem;
+  font-weight: 650;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.code-block {
+  margin: 0;
+  padding: 10px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+
+.status-pill {
+  display: block;
+  margin: 12px 0;
+  padding: 10px 14px;
+  font-size: 0.92rem;
+  font-weight: 600;
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: 10px;
+  overflow-wrap: anywhere;
+}
+
+.status-good {
+  color: var(--success);
+  border-color: var(--success);
+}
+
+.status-bad {
+  color: var(--danger);
+  border-color: var(--danger);
+  background: var(--danger-bg);
+}
+
+.claims {
+  margin: 0;
+}
+
+.claim {
+  padding: 8px 0;
+  border-top: 1px solid var(--border);
+}
+
+.claim:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.claim-name {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.claim-value {
+  margin: 2px 0 0;
+  font-size: 0.9rem;
+  overflow-wrap: anywhere;
+}
+
+.claim-desc {
+  display: block;
+  margin-top: 2px;
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.warn-hint {
+  padding: 10px 12px;
+  background: var(--danger-bg);
+  border: 1px solid var(--danger);
+  border-radius: 10px;
+  color: var(--text);
+}
+
+/* ---------- Regex tester ---------- */
+.match-count {
+  margin: 12px 0 8px;
+  font-weight: 650;
+}
+
+.regex-preview {
+  margin: 0 0 12px;
+  padding: 12px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+mark.hit {
+  padding: 0 1px;
+  color: inherit;
+  background: var(--accent-soft);
+  border-radius: 3px;
+  box-shadow: inset 0 0 0 1px var(--accent);
+}
+
+.match-list {
+  margin-bottom: 12px;
+}
+
+.match-item {
+  margin-bottom: 8px;
+  padding: 10px 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+
+.match-head {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.match-index {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+.match-value {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  font-size: 0.88rem;
+  overflow-wrap: anywhere;
+}
+
+.match-meta {
+  margin-top: 2px;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.match-groups {
+  margin: 6px 0 0;
+  padding-left: 18px;
+  list-style: disc;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  font-size: 0.82rem;
+  overflow-wrap: anywhere;
+}
+
+/* ---------- HTTP status reference ---------- */
+.status-list {
+  margin-bottom: 12px;
+}
+
+.status-item {
+  margin-bottom: 10px;
+  padding: 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.status-head {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.status-code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.status-name {
+  font-weight: 650;
+}
+
+.status-cat {
+  margin-left: auto;
+  padding: 2px 8px;
+  font-size: 0.75rem;
+  color: var(--muted);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+}
+
+.status-desc {
+  margin: 6px 0 10px;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.status-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* ---------- Data tables (cron) ---------- */
+.table-wrap {
+  margin-bottom: 12px;
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
+
+.data-table th,
+.data-table td {
+  padding: 9px 12px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+  overflow-wrap: anywhere;
+}
+
+.data-table th {
+  font-size: 0.8rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.data-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+/* ---------- Markdown previewer ---------- */
+.markdown-split {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.markdown-pane {
+  min-width: 0;
+}
+
+.markdown-preview {
+  min-height: 180px;
+  padding: 14px;
+  font-size: 0.95rem;
+  line-height: 1.65;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow-wrap: anywhere;
+}
+
+.markdown-preview > *:first-child {
+  margin-top: 0;
+}
+
+.markdown-preview h1,
+.markdown-preview h2,
+.markdown-preview h3,
+.markdown-preview h4,
+.markdown-preview h5,
+.markdown-preview h6 {
+  margin: 16px 0 8px;
+  line-height: 1.3;
+}
+
+.markdown-preview h1 { font-size: 1.5rem; }
+.markdown-preview h2 { font-size: 1.28rem; }
+.markdown-preview h3 { font-size: 1.12rem; }
+.markdown-preview h4,
+.markdown-preview h5,
+.markdown-preview h6 { font-size: 1rem; }
+
+.markdown-preview p,
+.markdown-preview ul,
+.markdown-preview ol {
+  margin: 0 0 10px;
+}
+
+.markdown-preview ul,
+.markdown-preview ol {
+  padding-left: 22px;
+  list-style: revert;
+}
+
+.markdown-preview li {
+  margin-bottom: 4px;
+}
+
+.markdown-preview a {
+  color: var(--accent);
+  overflow-wrap: anywhere;
+}
+
+.markdown-preview img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+.markdown-preview blockquote {
+  margin: 0 0 10px;
+  padding: 6px 14px;
+  color: var(--muted);
+  border-left: 3px solid var(--border-strong);
+}
+
+.markdown-preview code {
+  padding: 1px 5px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  font-size: 0.86em;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+}
+
+.markdown-preview .md-code {
+  margin: 0 0 12px;
+  padding: 12px;
+  overflow-x: auto;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+
+.markdown-preview .md-code code {
+  padding: 0;
+  background: none;
+  border: 0;
+  white-space: pre;
+}
+
+.markdown-preview .md-table-wrap {
+  margin: 0 0 12px;
+  overflow-x: auto;
+}
+
+.markdown-preview table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.markdown-preview th,
+.markdown-preview td {
+  padding: 6px 10px;
+  border: 1px solid var(--border);
+}
+
+.markdown-preview hr {
+  margin: 16px 0;
+  border: 0;
+  border-top: 1px solid var(--border-strong);
+}
+
+.markdown-preview input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  vertical-align: -2px;
+  accent-color: var(--accent);
+}
+
+.md-empty {
+  color: var(--muted);
+  font-style: italic;
+}
+
 /* ---------- Responsive layout ---------- */
 @media (min-width: 560px) {
   .tool-grid {
@@ -776,6 +1302,13 @@ svg {
 
   .stats {
     grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+
+  /* Side-by-side compare/preview on wide screens; stacked on phones. */
+  .diff-columns,
+  .markdown-split {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
   }
 
   .main {

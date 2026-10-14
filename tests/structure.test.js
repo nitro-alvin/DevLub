@@ -56,9 +56,10 @@ test('tool views use unique element ids', () => {
   }
 });
 
-test('the registry exposes exactly the eight tools', () => {
+test('the registry exposes exactly the eighteen tools', () => {
   assert.deepEqual(tools.map((t) => t.id), [
     'json', 'base64', 'url', 'uuid', 'counter', 'color', 'hash', 'timestamp',
+    'diff', 'jwt', 'regex', 'sql', 'json2csv', 'markdown', 'httpstatus', 'cron', 'htmlentity', 'base',
   ]);
   for (const tool of tools) {
     assert.equal(typeof tool.name, 'string');
@@ -72,11 +73,21 @@ test('the registry exposes exactly the eight tools', () => {
 });
 
 test('every tool offers a download control and the right tools offer file import', () => {
-  // Colour, UUID and Timestamp deliberately do not take file uploads.
-  const withImport = ['json', 'base64', 'url', 'counter', 'hash'];
+  // Import suits text/code tools; it is deliberately absent from the reference-style
+  // tools (colour, UUID, timestamp, HTTP status, cron, number bases).
+  const withImport = [
+    'json', 'base64', 'url', 'counter', 'hash',
+    'diff', 'jwt', 'regex', 'sql', 'json2csv', 'markdown', 'htmlentity',
+  ];
+  // The HTTP status lookup is a static reference, so it generates nothing to download.
+  const withDownload = tools.map((tool) => tool.id).filter((id) => id !== 'httpstatus');
   for (const tool of tools) {
     const source = read('js/tools/' + tool.id + '.js');
-    assert.ok(source.includes('downloadMarkup'), tool.id + ' should offer a download control');
+    if (withDownload.includes(tool.id)) {
+      assert.ok(source.includes('downloadMarkup'), tool.id + ' should offer a download control');
+    } else {
+      assert.ok(!source.includes('downloadMarkup'), tool.id + ' should not offer a download control');
+    }
     if (withImport.includes(tool.id)) {
       assert.ok(source.includes('fileImportMarkup'), tool.id + ' should offer file import');
     } else {

@@ -12,6 +12,27 @@ export const DOCUMENT_EXTENSIONS = ['txt', 'md', 'csv'];
 /** Text-ish data formats the code-style tools accept. */
 export const DATA_EXTENSIONS = ['txt', 'json', 'csv', 'md', 'sql', 'log'];
 
+/** Source and text formats for the diff checker. */
+export const CODE_EXTENSIONS = [
+  'txt', 'md', 'json', 'js', 'ts', 'jsx', 'tsx', 'html', 'htm', 'css', 'scss',
+  'xml', 'sql', 'cs', 'java', 'py', 'php', 'cpp', 'c', 'h', 'yaml', 'yml', 'log',
+];
+
+/** Markdown documents. */
+export const MARKDOWN_EXTENSIONS = ['md', 'markdown', 'txt'];
+
+/** Plain-text payloads (JWT tokens are usually copied into a .txt file). */
+export const TOKEN_EXTENSIONS = ['txt', 'jwt', 'json', 'log'];
+
+/** Markup / text files for the entity converter. */
+export const HTML_EXTENSIONS = ['txt', 'html', 'htm', 'md', 'xml', 'json', 'csv'];
+
+/** SQL scripts. */
+export const SQL_EXTENSIONS = ['sql', 'txt', 'md', 'log'];
+
+/** JSON documents. */
+export const JSON_EXTENSIONS = ['json', 'txt'];
+
 /** Human-readable size, e.g. 1536 -> "1.5 KB". */
 export function formatFileSize(bytes) {
   const size = Number(bytes);
