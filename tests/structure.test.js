@@ -56,10 +56,11 @@ test('tool views use unique element ids', () => {
   }
 });
 
-test('the registry exposes exactly the eighteen tools', () => {
+test('the registry exposes exactly the twenty tools', () => {
   assert.deepEqual(tools.map((t) => t.id), [
     'json', 'base64', 'url', 'uuid', 'counter', 'color', 'hash', 'timestamp',
     'diff', 'jwt', 'regex', 'sql', 'json2csv', 'markdown', 'httpstatus', 'cron', 'htmlentity', 'base',
+    'qr', 'minifier',
   ]);
   for (const tool of tools) {
     assert.equal(typeof tool.name, 'string');
@@ -77,13 +78,17 @@ test('every tool offers a download control and the right tools offer file import
   // tools (colour, UUID, timestamp, HTTP status, cron, number bases).
   const withImport = [
     'json', 'base64', 'url', 'counter', 'hash',
-    'diff', 'jwt', 'regex', 'sql', 'json2csv', 'markdown', 'htmlentity',
+    'diff', 'jwt', 'regex', 'sql', 'json2csv', 'markdown', 'htmlentity', 'qr', 'minifier',
   ];
   // The HTTP status lookup is a static reference, so it generates nothing to download.
+  // The QR tool has dedicated PNG/SVG buttons instead of the shared name bar.
   const withDownload = tools.map((tool) => tool.id).filter((id) => id !== 'httpstatus');
   for (const tool of tools) {
     const source = read('js/tools/' + tool.id + '.js');
-    if (withDownload.includes(tool.id)) {
+    if (tool.id === 'qr') {
+      assert.ok(source.includes('downloadBlob'), 'qr should download a PNG');
+      assert.ok(source.includes('downloadText'), 'qr should download an SVG');
+    } else if (withDownload.includes(tool.id)) {
       assert.ok(source.includes('downloadMarkup'), tool.id + ' should offer a download control');
     } else {
       assert.ok(!source.includes('downloadMarkup'), tool.id + ' should not offer a download control');
@@ -97,16 +102,32 @@ test('every tool offers a download control and the right tools offer file import
 });
 
 test('the app never contacts the network or leaves data on the device', () => {
+  // Third-party bundles carry source/licence URLs in comments. The W3C SVG
+  // namespace is an identifier, not a request. Every other URL is rejected.
+  const allowedUrls = new Set(['http://www.w3.org/2000/svg']);
   for (const file of jsFiles) {
     const source = readFileSync(file, 'utf8');
     assert.ok(!/\bfetch\s*\(/.test(source), file + ' must not call fetch()');
+    if (file.includes('/vendor/')) {
+      // Bundled libraries list browser globals (including XMLHttpRequest) as
+      // names; only an actual call would be a network request.
+      assert.ok(!/new\s+XMLHttpRequest\s*\(/.test(source), file + ' must not create an XMLHttpRequest');
+      assert.ok(!/navigator\.sendBeacon\s*\(/.test(source), file + ' must not call sendBeacon');
+      continue;
+    }
     assert.ok(!/XMLHttpRequest/.test(source), file + ' must not use XMLHttpRequest');
     assert.ok(!/sendBeacon/.test(source), file + ' must not use sendBeacon');
-    assert.ok(!/https?:\/\//.test(source), file + ' must not reference external URLs');
+    for (const match of source.matchAll(/https?:\/\/[^\s"'<>`]+/g)) {
+      assert.ok(allowedUrls.has(match[0]), file + ' must not reference external URL ' + match[0]);
+    }
   }
   assert.ok(!/https?:\/\//.test(css.replace(/\/\*[\s\S]*?\*\//g, '')), 'CSS must not reference external URLs');
   assert.ok(!/<script[^>]+src="https?:/.test(html), 'no external scripts');
   assert.ok(!/<link[^>]+href="https?:/.test(html), 'no external stylesheets');
+
+  for (const vendored of ['js/vendor/qrcode.js', 'js/vendor/terser.js', 'js/vendor/csso.esm.js']) {
+    assert.ok(existsSync(join(root, vendored)), vendored + ' should be bundled locally');
+  }
 });
 
 test('every data-action button has a matching handler', () => {

@@ -26,6 +26,8 @@ and every tool keeps working offline once the page has loaded.
 | **Cron Helper** | Explain a 5-field cron expression or `@shortcut` field by field, with common examples and inline validation. |
 | **HTML Entity Converter** | Encode text (or Unicode) into HTML entities and decode named, decimal and hex entities back to plain text. |
 | **Number Base Converter** | Convert between binary, octal, decimal and hex with exact `BigInt` maths — large integers are never rounded. |
+| **QR Code Generator** | Turn URLs, plain text, email addresses, phone numbers or GitHub links into scannable QR codes. Choose size, error correction and quiet zone, then download PNG/SVG or copy the image. |
+| **HTML / CSS / JS Minifier** | Minify HTML, CSS or JavaScript with real parsers (CSso and Terser), then copy or download a `.min` copy with a before/after size report. |
 
 ## Files
 
@@ -34,19 +36,24 @@ built-in browser APIs (`FileReader`, `Blob`, object URLs), with nothing uploaded
 
 - **Choose file** loads `.txt`, `.md`, `.csv`, `.json`, `.sql` or `.log` (depending on the tool)
   into the normal input field, shows the file name and size, and lets you keep editing before processing.
+  The QR generator imports `.txt`, and the minifier imports `.html`, `.htm`, `.css`, `.js` and `.mjs`
+  (switching to the matching mode automatically).
 - **Remove file** detaches the imported file and clears its contents.
 - **Download** saves the result you produced (with a name you can edit first) as a fresh copy.
   The original file on disk is never modified or overwritten.
 - Files are capped at **5 MB**; empty, oversized and unsupported files get a friendly message.
+  The minifier processes up to **2 MB** of source to stay responsive on phones.
 
 Import is offered where it makes sense: JSON, Base64, URL, Text Counter, SHA-256, Diff Checker,
-JWT Decoder, Regex Tester, SQL Formatter, JSON → CSV, Markdown Previewer and the HTML Entity
-Converter. Colour, UUID, Timestamp, HTTP Status, Cron Helper and Number Base Converter work
-straight from the keyboard (though most still offer a download).
+JWT Decoder, Regex Tester, SQL Formatter, JSON → CSV, Markdown Previewer, HTML Entity Converter,
+QR Code Generator and the Minifier. Colour, UUID, Timestamp, HTTP Status, Cron Helper and Number
+Base Converter work straight from the keyboard (though most still offer a download).
 
 The Diff Checker imports **two** files (original and modified) and can download the unified diff;
 the Markdown Previewer saves edited Markdown back out as `.md`; JSON → CSV saves `.csv`; the SQL
 Formatter saves `.sql`; and the JWT, Regex, Cron, Entity and Number Base tools save `.txt` reports.
+The QR generator saves `.png` and `.svg` images, and the minifier saves new `.min.html`,
+`.min.css` and `.min.js` copies — never the imported original.
 
 > SHA-256 hashes the **text content** shown in the field, encoded as UTF-8. That matches a
 > plain text file's contents, but it is not a byte-for-byte checksum of an arbitrary binary file.
@@ -87,19 +94,22 @@ js/
   lib/                Pure, testable logic (JSON, Base64, URL, UUID, text stats,
                         colour conversion, SHA-256, timestamps, diffing, JWT, regex,
                         SQL, CSV, Markdown, HTTP status, cron, HTML entities, number
-                        bases, and file name/type/size helpers)
+                        bases, QR encoding/rendering, HTML/CSS/JS minification, and
+                        file name/type/size helpers)
+  vendor/             Locally bundled MIT/BSD libraries (qrcode-generator,
+                        Terser, CSso) — see vendor/NOTICE.md
   tools/              One module per tool view + the registry
 tests/                Unit tests (Node's built-in test runner, zero dependencies)
 ```
 
 ## Tool count
 
-The home screen shows **18 tools**, and the search box filters all of them by name,
+The home screen shows **20 tools**, and the search box filters all of them by name,
 description and keywords.
 
 ## Tests
 
-Zero-dependency tests for the pure logic and the page structure:
+Zero-install tests (Node's built-in runner) for the pure logic, the QR structure and the minifiers:
 
 ```bash
 node --test tests/*.test.js
@@ -108,5 +118,6 @@ node --test tests/*.test.js
 ## Privacy
 
 "Your data stays in your browser. Pocket DevTools does not upload your input."
-A unit test enforces this by failing if any source file ever introduces `fetch()`,
-`XMLHttpRequest`, `sendBeacon` or an external URL.
+A unit test enforces this by failing if any first-party source file ever introduces
+`fetch()`, `XMLHttpRequest`, `sendBeacon` or an external URL. Bundled libraries are
+checked for actual network calls too, and every one of them is served from `js/vendor/`.

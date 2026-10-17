@@ -18,6 +18,8 @@ import { mountHttpStatusTool } from './httpstatus.js';
 import { mountCronTool } from './cron.js';
 import { mountHtmlEntityTool } from './htmlentity.js';
 import { mountBaseTool } from './base.js';
+import { mountQrTool } from './qr.js';
+import { mountMinifierTool } from './minifier.js';
 
 export const tools = [
   {
@@ -163,5 +165,21 @@ export const tools = [
     keywords: ['binary', 'octal', 'decimal', 'hex', 'hexadecimal', 'base', 'convert', 'radix', 'bit'],
     badge: '0x',
     mount: mountBaseTool,
+  },
+  {
+    id: 'qr',
+    name: 'QR Code Generator',
+    description: 'Create scannable QR codes from URLs, text, emails or phone numbers — all on your device.',
+    keywords: ['qr', 'qrcode', 'barcode', 'scan', 'url', 'link', 'contact', 'email', 'phone', 'share', 'png', 'svg'],
+    badge: 'QR',
+    mount: mountQrTool,
+  },
+  {
+    id: 'minifier',
+    name: 'HTML / CSS / JS Minifier',
+    description: 'Minify HTML, CSS or JavaScript and see exactly how many bytes you saved.',
+    keywords: ['minify', 'minifier', 'compress', 'html', 'css', 'javascript', 'js', 'whitespace', 'comments', 'size'],
+    badge: 'MIN',
+    mount: mountMinifierTool,
   },
 ];

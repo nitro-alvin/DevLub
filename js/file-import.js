@@ -19,9 +19,10 @@ export function fileImportMarkup({
   label = 'Choose file',
   chooseAction = 'chooseFile',
   removeAction = 'removeFile',
+  maxBytes = MAX_FILE_BYTES,
 }) {
   const note = (hint ? hint + ' ' : '') +
-    'Files up to ' + formatFileSize(MAX_FILE_BYTES) + ' are read on your device.';
+    'Files up to ' + formatFileSize(maxBytes) + ' are read on your device.';
   return (
     '<div class="file-import">' +
     '<input class="visually-hidden" type="file" id="' + id + '" ' +

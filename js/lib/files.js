@@ -49,6 +49,25 @@ export function formatFileSize(bytes) {
   return rounded + ' ' + units[unit];
 }
 
+/**
+ * Precise, developer-facing byte size: 12345 -> "12.1 KB".
+ * Unlike formatFileSize this keeps one decimal for every value above 1 KB,
+ * which is what the size statistics compare against each other.
+ */
+export function formatBytes(bytes) {
+  const size = Number(bytes);
+  if (!Number.isFinite(size) || size <= 0) return '0 B';
+  if (size < 1024) return Math.round(size) + ' B';
+  const units = ['KB', 'MB', 'GB'];
+  let value = size / 1024;
+  let unit = 0;
+  while (value >= 1024 && unit < units.length - 1) {
+    value /= 1024;
+    unit += 1;
+  }
+  return (Math.round(value * 10) / 10).toFixed(1) + ' ' + units[unit];
+}
+
 /** Lowercase extension without the dot: "Report.JSON" -> "json". */
 export function extensionOf(name) {
   const match = String(name == null ? '' : name).match(/\.([A-Za-z0-9]+)\s*$/);

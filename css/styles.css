@@ -1324,3 +1324,140 @@ mark.hit {
     animation-duration: 0.01ms !important;
   }
 }
+
+/* ---------- QR Code Generator ---------- */
+.options-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin: 14px 0 4px;
+}
+
+.options-grid > div {
+  min-width: 0;
+}
+
+.options-grid select,
+.qr-select {
+  width: 100%;
+}
+
+.option-wide {
+  grid-column: 1 / -1;
+}
+
+.range-input {
+  display: block;
+  width: 100%;
+  min-height: 44px;
+  margin: 0;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+.range-value {
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+
+.qr-result {
+  margin-top: 14px;
+  padding: 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+}
+
+.qr-result[hidden] {
+  display: none;
+}
+
+/* Always white behind the code, matching the downloaded PNG/SVG. */
+.qr-preview {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  background: #ffffff;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+}
+
+.qr-preview canvas {
+  display: block;
+  width: 100%;
+  max-width: 420px;
+  height: auto;
+  image-rendering: pixelated;
+}
+
+.qr-meta {
+  margin: 10px 0 2px;
+  color: var(--muted);
+  font-size: 0.85rem;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+/* ---------- HTML / CSS / JS Minifier ---------- */
+.mode-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 4px 0 14px;
+}
+
+.mode-tabs .btn {
+  flex: 1 1 96px;
+  min-height: 48px;
+}
+
+#min-module-group[hidden] {
+  display: none;
+}
+
+.minify-output {
+  margin-top: 14px;
+}
+
+.minify-output[hidden] {
+  display: none;
+}
+
+.stats.minify-stats {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+/* Long action labels get a full-width row each on phones. */
+.minify-actions .btn {
+  flex: 1 1 100%;
+}
+
+/* Stack the editable name above the download button so neither is squeezed. */
+.download-bar-stacked .field-input-group {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.download-bar-stacked .field-input-group .btn {
+  width: 100%;
+}
+
+.btn[disabled] {
+  opacity: 0.55;
+  cursor: progress;
+}
+
+@media (min-width: 560px) {
+  .options-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .stats.minify-stats {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .minify-actions .btn {
+    flex: 1 1 132px;
+  }
+}

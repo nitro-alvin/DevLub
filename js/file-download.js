@@ -12,29 +12,31 @@ import { safeFileName } from './lib/files.js';
  * Markup for a download control. `id` must be unique across the page.
  * The block starts hidden and is revealed once a tool has a result.
  */
-export function downloadMarkup({ id, label = 'File name', hint = '' }) {
+export function downloadMarkup({ id, label = 'File name', hint = '', buttonLabel = 'Download', stacked = false }) {
   return (
-    '<div class="download-bar" data-download-bar hidden>' +
+    '<div class="download-bar' + (stacked ? ' download-bar-stacked' : '') + '" data-download-bar hidden>' +
     '<label class="field-label" for="' + id + '">' + label + '</label>' +
     '<div class="field-input-group">' +
     '<input class="code-input" id="' + id + '" type="text" autocomplete="off" spellcheck="false" ' +
     'autocapitalize="off" enterkeyhint="done">' +
     '<button type="button" class="btn" data-action="download">' +
-    icons.download + '<span>Download</span></button>' +
+    icons.download + '<span>' + buttonLabel + '</span></button>' +
     '</div>' +
     (hint ? '<p class="field-hint">' + hint + '</p>' : '') +
     '</div>'
   );
 }
 
-/** Trigger a text download with the given filename. Returns true when sent. */
-export function downloadText(text, fileName, mime = 'text/plain;charset=utf-8') {
-  if (text == null || text === '') {
+/**
+ * Save any Blob through a temporary object URL. Used for text, SVG and PNG.
+ * Returns true when the browser was handed the download.
+ */
+export function downloadBlob(blob, fileName) {
+  if (!blob || !blob.size) {
     showToast('There is nothing to download yet', { type: 'error' });
     return false;
   }
-  const name = safeFileName(fileName) || 'download.txt';
-  const blob = new Blob([text], { type: mime });
+  const name = safeFileName(fileName) || 'download';
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
   link.href = url;
@@ -47,6 +49,15 @@ export function downloadText(text, fileName, mime = 'text/plain;charset=utf-8') 
   setTimeout(() => URL.revokeObjectURL(url), 1000);
   showToast('Downloaded ' + name);
   return true;
+}
+
+/** Trigger a text download with the given filename. Returns true when sent. */
+export function downloadText(text, fileName, mime = 'text/plain;charset=utf-8') {
+  if (text == null || text === '') {
+    showToast('There is nothing to download yet', { type: 'error' });
+    return false;
+  }
+  return downloadBlob(new Blob([text], { type: mime }), fileName || 'download.txt');
 }
 
 /**
